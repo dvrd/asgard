@@ -1,0 +1,7 @@
+:author: Dan Castrillo
+:version: 0.1.0
+
+= Asgard
+
+Odin implementation of educationalsp by @tjdevries
+
