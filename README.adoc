@@ -3,5 +3,5 @@
 
 = Asgard
 
-Odin implementation of educationalsp by @tjdevries
+Odin implementation of https://github.com/tjdevries/educationalsp[educationalsp] by @tjdevries
 
