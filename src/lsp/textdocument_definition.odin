@@ -1,3 +1,0 @@
-package lsp
-
-DefinitionParams :: TextDocumentPositionParams
