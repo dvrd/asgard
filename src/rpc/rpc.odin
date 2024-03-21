@@ -1,4 +1,4 @@
-package rpc
+package asgard
 
 import "core:bufio"
 import "core:bytes"
