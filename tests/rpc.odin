@@ -12,23 +12,23 @@ MessageExample :: struct {
 @(test)
 encode_test :: proc(t: ^testing.T) {
 	using testing
-	msg := MessageExample{true}
-	expected := "Content-Length: 16\r\n\r\n{\"testing\":true}"
-	actual := rpc.encode(msg)
+	msg := rpc.BaseMessage{"hi"}
+	expected := "Content-Length: 15\r\n\r\n{\"method\":\"hi\"}"
+	actual, err := rpc.encode(msg)
 
-	expect(t, actual == expected, fmt.tprintf("Expected: %v, Actual: %v", expected, actual))
+	expect(t, actual == expected, fmt.tprintf("\nExpected:\n%v\nActual:\n%v", expected, actual))
 }
 
 @(test)
 decode_test :: proc(t: ^testing.T) {
 	using testing
-	msg := "content-length: 16\r\n\r\n{\"Method\": \"hi\"}"
+	msg := "Content-Length: 15\r\n\r\n{\"method\":\"hi\"}"
 	expected := "hi"
 	actual, content, err := rpc.decode(transmute([]u8)msg)
 
 	expect(t, err == nil, fmt.tprintf("Expected: %v, Actual: %v", nil, err))
 	expect(t, actual == expected, fmt.tprintf("Expected: %v, Actual: %v", expected, actual))
-	expect(t, len(content) == 16, fmt.tprintf("Expected: %v, Actual: %v", 16, len(content)))
+	expect(t, len(content) == 15, fmt.tprintf("Expected: %v, Actual: %v", 15, len(content)))
 }
 
 @(test)
