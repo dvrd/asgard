@@ -42,9 +42,9 @@ TextEdit :: struct {
 }
 
 TextDocumentCodeActionParams :: struct {
-	textdocument: TextDocumentIdentifier `json:"textDocument"`,
-	range:        Range `json:"range"`,
-	ctx:          CodeActionContext `json:"context"`,
+	text_document: TextDocumentIdentifier `json:"textDocument"`,
+	range:         Range `json:"range"`,
+	ctx:           CodeActionContext `json:"context"`,
 }
 
 CodeActionContext :: struct {}

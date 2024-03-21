@@ -8,9 +8,16 @@ State :: struct {
 	documents: map[string]string,
 }
 
-new_state :: proc() -> State {
-	documents := make(map[string]string)
-	return State{documents}
+new_state :: proc(allocator := context.allocator) -> (state: ^State) {
+	state = new(State, allocator)
+	documents := make(map[string]string, allocator = allocator)
+	state.documents = documents
+	return
+}
+
+destroy_state :: proc(state: ^State) {
+	delete(state.documents)
+	free(state)
 }
 
 get_diagnostics_for_file :: proc(text: string) -> []lsp.Diagnostic {
@@ -59,13 +66,18 @@ update_document :: proc(state: ^State, uri, text: string) -> []lsp.Diagnostic {
 	return get_diagnostics_for_file(text)
 }
 
-hover :: proc(state: ^State, id: int, uri: string, position: lsp.Position) -> lsp.Response {
+hover :: proc(
+	state: ^State,
+	id: lsp.RequestId,
+	uri: string,
+	position: lsp.Position,
+) -> lsp.Response {
 	document := state.documents[uri]
 
 	return(
 		lsp.Response {
 			rpc = "2.0",
-			id = i64(id),
+			id = id,
 			result = lsp.HoverResult {
 				contents = fmt.tprintf("File: %s, Characters: %d", uri, len(document)),
 			},
@@ -73,11 +85,16 @@ hover :: proc(state: ^State, id: int, uri: string, position: lsp.Position) -> ls
 	)
 }
 
-definition :: proc(state: ^State, id: int, uri: string, position: lsp.Position) -> lsp.Response {
+definition :: proc(
+	state: ^State,
+	id: lsp.RequestId,
+	uri: string,
+	position: lsp.Position,
+) -> lsp.Response {
 	return(
 		lsp.Response {
 			rpc = "2.0",
-			id = i64(id),
+			id = id,
 			result = lsp.Location {
 				uri = uri,
 				range = lsp.Range {
@@ -89,7 +106,7 @@ definition :: proc(state: ^State, id: int, uri: string, position: lsp.Position) 
 	)
 }
 
-text_document_code_action :: proc(state: ^State, id: int, uri: string) -> lsp.Response {
+text_document_code_action :: proc(state: ^State, id: lsp.RequestId, uri: string) -> lsp.Response {
 	text := state.documents[uri]
 
 	actions := [dynamic]lsp.CodeAction{}
@@ -126,14 +143,14 @@ text_document_code_action :: proc(state: ^State, id: int, uri: string) -> lsp.Re
 
 	response := lsp.Response {
 		rpc    = "2.0",
-		id     = i64(id),
+		id     = id,
 		result = actions[:],
 	}
 
 	return response
 }
 
-text_document_completion :: proc(state: ^State, id: int, uri: string) -> lsp.Response {
+text_document_completion :: proc(state: ^State, id: lsp.RequestId, uri: string) -> lsp.Response {
 	// Ask your static analysis tools to figure out good completions
 	items := []lsp.CompletionItem {
 		 {
@@ -145,7 +162,7 @@ text_document_completion :: proc(state: ^State, id: int, uri: string) -> lsp.Res
 
 	response := lsp.Response {
 		rpc    = "2.0",
-		id     = i64(id),
+		id     = id,
 		result = items,
 	}
 

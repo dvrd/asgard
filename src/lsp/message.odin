@@ -13,8 +13,6 @@ Request :: struct {
 		InitializeParams,
 		TextDocumentCodeActionParams,
 		CompletionParams,
-		DidChangeTextDocumentParams,
-		DidOpenTextDocumentParams,
 	} `json:"params"`,
 }
 
@@ -34,6 +32,8 @@ Notification :: struct {
 	rpc:    string `json:"jsonrpc"`,
 	method: string `json:"method"`,
 	params: union {
+		DidOpenTextDocumentParams,
+		DidChangeTextDocumentParams,
 		PublishDiagnosticsParams,
 	} `json:"params"`,
 }

@@ -4,6 +4,7 @@ import "core:bufio"
 import "core:bytes"
 import "core:encoding/json"
 import "core:fmt"
+import "core:log"
 import "core:strconv"
 import "core:strings"
 import "core:testing"
@@ -89,5 +90,5 @@ split :: proc(
 	total_len := len(split_data[0]) + 4 + content_len
 	content := data[:total_len]
 
-	return total_len, content, nil, true
+	return total_len, content, nil, false
 }
