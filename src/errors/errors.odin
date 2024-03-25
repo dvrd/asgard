@@ -1,6 +1,6 @@
-package asgard
+package errors
 
-ERRORNO_MSGS: [105]string = {
+NO_MSGS: [105]string = {
 	"THIS ONE SHOULD BE UNREACHABLE",
 	"Operation not permitted",
 	"No such file or directory",
